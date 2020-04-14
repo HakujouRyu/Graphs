@@ -192,8 +192,34 @@ class Graph:
             if next_vert not in visited and result is None:
                 result = self.dfs_recursive(next_vert, destination_vertex, visited, newpath)
         if result is not None: return result
-
+    
+    def ancestor(self, starting_vertex):
         
+        stck = Stack()
+        stck.push([starting_vertex])
+        # Create a set of traversed vertices
+        visited = set()
+        # While stack is not empty:
+        longest = []
+        while stck.size() > 0:
+            current_path = stck.pop()
+            if current_path[-1] not in visited:
+                # mark as visited
+                visited.add(current_path[-1])
+
+                for next_vert in self.get_neighbors(current_path[-1]):
+                    new_path = list(current_path)
+                    new_path.append(next_vert)
+                    stck.push(new_path)
+                    if len(new_path) > len(longest):
+                        longest = new_path.copy()
+                    if len(new_path) == len(longest) and new_path[-1] < longest[-1]:
+                        longest = new_path
+        if not longest:
+            return -1
+        return longest[-1]
+
+           
 
 if __name__ == '__main__':
     graph = Graph()  # Instantiate your graph
